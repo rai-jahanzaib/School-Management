@@ -176,13 +176,11 @@ class DatabaseManager:
         # hardcoded in the file. See secrets.toml.example / the setup
         # instructions for exactly what to put in .streamlit/secrets.toml
         # (locally) or the app's "Secrets" settings (Streamlit Cloud).
-        db_url = st.secrets.get("SUPABASE_DB_URL")
-        if not db_url:
-            raise RuntimeError(
-                "Missing SUPABASE_DB_URL in Streamlit secrets. "
-                "Add it to .streamlit/secrets.toml (local) or the app's "
-                "Secrets settings (Streamlit Cloud). See the setup notes."
-            )
+     db_url = st.secrets.get("SUPABASE_DB_URL")
+if not db_url:
+    st.error("⚠️ SUPABASE_DB_URL missing hai! Pehle Streamlit ke Secrets mein database link dalein.")
+    st.stop() # Yeh app ko crash nahi hone dega, bas yahin rok dega
+
         self.conn = psycopg2.connect(db_url, cursor_factory=psycopg2.extras.RealDictCursor)
         self.conn.autocommit = False
         self._create_tables()
