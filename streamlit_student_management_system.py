@@ -170,22 +170,20 @@ class DatabaseManager:
     translates "?" -> "%s" and returns dict-like rows, so all the
     business logic in Session works completely unchanged.
     """
-
+ 
     def __init__(self):
-        # Supabase connection details come from Streamlit secrets, never
-        # hardcoded in the file. See secrets.toml.example / the setup
-        # instructions for exactly what to put in .streamlit/secrets.toml
-        # (locally) or the app's "Secrets" settings (Streamlit Cloud).
-     db_url = st.secrets.get("SUPABASE_DB_URL")
-if not db_url:
-    st.error("⚠️ SUPABASE_DB_URL missing hai! Pehle Streamlit ke Secrets mein database link dalein.")
-    st.stop() # Yeh app ko crash nahi hone dega, bas yahin rok dega
+        # Supabase connection details come from Streamlit secrets...
+        db_url = st.secrets.get("SUPABASE_DB_URL")
+        if not db_url:
+            st.error("⚠️ SUPABASE_DB_URL missing hai! Pehle Streamlit ke Secrets mein database link dalein.")
+            st.stop() # Yeh app ko crash nahi hone dega, bas yahin rok dega
 
         self.conn = psycopg2.connect(db_url, cursor_factory=psycopg2.extras.RealDictCursor)
         self.conn.autocommit = False
         self._create_tables()
         self._create_defaults_if_empty()
         os.makedirs(PHOTOS_DIR, exist_ok=True)
+
 
     # ---------------------------------------------------------------
     @staticmethod
